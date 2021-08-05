@@ -1,5 +1,5 @@
 FunctionGrapher
-1.Write a Python GUI program that plots arbitrary user-entered function. ✔️
+1. Write a Python GUI program that plots arbitrary user-entered function. ✔️
 2. Take a function of x from the user, e.g., 5*x^3 + 2*x.✔️
 3. Take min and max values of x from the user.✔️
 4. The following operators must be supported: + - / * ^.✔️ Also does [(, ), sin, cos, tan, abs, trunc, PI]
