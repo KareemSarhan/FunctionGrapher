@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PySide2 import *
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import QLabel , QGridLayout, QTextEdit ,QFormLayout , QLineEdit, QPushButton, QHBoxLayout,QVBoxLayout,QApplication, QWidget , QInputDialog
@@ -9,11 +10,11 @@ from pyparsing import Literal,CaselessLiteral,Word,Combine,Group,Optional,\
     ZeroOrMore,Forward,nums,alphas
 from numpy import *
 import operator
-funstring=''
-lisgraph = []
+
 fromto = [0,0,""]
 exprStack = []
 
+#Parsing code
 def pushFirst( strg, loc, toks ):
     exprStack.append( toks[0] )
 def pushUMinus( strg, loc, toks ):
@@ -110,6 +111,9 @@ def compute(s):
     results = BNF().parseString( s )
     val = evaluateStack( exprStack[:] )
     return val
+
+
+#genrates the matplot graph
 class Canvas(FigureCanvas):
     def __init__(self, parent):
         fig, self.ax = plt.subplots(figsize=(5, 4), dpi=200)
@@ -126,7 +130,7 @@ class Canvas(FigureCanvas):
 
 
 
-
+#checks changes in from the gui
 def text_changed(s):
     if s:
         fromto[2]=s
@@ -137,6 +141,7 @@ def text_changed2(s):
 def text_changed3(s):
     if s:
         fromto[1]=s
+#calls the grapher and add it to the app layout
 def onButtonClicked():
     demo = AppDemo()
     if(layoutM.itemAt(2)!=None):
@@ -145,20 +150,25 @@ def onButtonClicked():
         
     
 
-
+#embeds the graph into a qt widget 
 class AppDemo(QWidget):
     def __init__(self):
         super().__init__()
         chart = Canvas(self)
 
+#genrates the app
 app = QApplication(sys.argv)
 window = QWidget()
+window.setGeometry(50,50,1000,970)
 window.setWindowTitle("MyGrapher")
 window.show()
 
+#layouts
 layoutM = QVBoxLayout(window)
 layout = QGridLayout(window)
 layoutM.addLayout(layout)
+
+#components
 FunctionLabel = QLabel("Function:")
 FunctionEdit = QLineEdit()
 MinLabel = QLabel("Min:")
@@ -166,10 +176,14 @@ MinEdit = QLineEdit()
 MaxLabel = QLabel("Max:")
 MaxEdit = QLineEdit()
 Graphbutton = QPushButton('Graph')
+
+#attach componennts to event listners 
 Graphbutton.clicked.connect(onButtonClicked)
 FunctionEdit.textChanged.connect(text_changed)
 MinEdit.textChanged.connect(text_changed2)
 MaxEdit.textChanged.connect(text_changed3)
+
+#add components to layout
 layout.addWidget(FunctionLabel, 0, 0)
 layout.addWidget(FunctionEdit, 0, 1)
 layout.addWidget(MinLabel, 1, 0)
@@ -178,13 +192,11 @@ layout.addWidget(MaxLabel, 2, 0)
 layout.addWidget(MaxEdit, 2, 1)
 layout.setRowStretch(2, 1)
 layoutM.addWidget(Graphbutton)
+
+#styling the layout
 layoutM.addStretch()
 layoutM.setAlignment(Qt.AlignHCenter)
 
 
 
 sys.exit(app.exec_())
-if False:
-    app.exit()
-    app.exit()     
-        
